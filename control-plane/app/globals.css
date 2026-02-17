@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+:root {
+  --font-size: 16px;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --bg-900: #0B0C0F;
+  --panel-800: #0F1114;
+  --panel-700: #14161A;
+  --panel-600: #1A1D23;
+  --muted-600: #1B1E22;
+  --text-100: #FFFFFF;
+  --text-60: rgba(255,255,255,0.65);
+  --text-40: rgba(255,255,255,0.40);
+  --accent-500: #FFC857;
+  --accent-400: #FFD980;
+  --success-500: #52D890;
+  --neutral-500: #9AA0A6;
+  --glass-000: rgba(255,255,255,0.03);
+
+  /* Gudanta Dark Theme - Production Colors */
+  --accent-yellow: #FFC857;
+  --success-green: #52D890;
+  --danger-red: #FF6B6B;
+  --warning-orange: #FFB84D;
+
+  /* Base Theme Variables */
+  --background: #0B0C0F;
+  --foreground: #FFFFFF;
+  --card: #14161A;
+  --card-foreground: #FFFFFF;
+  --popover: #1A1D23;
+  --popover-foreground: #FFFFFF;
+  --primary: #FFC857;
+  --primary-foreground: #0B0C0F;
+  --secondary: #14161A;
+  --secondary-foreground: #FFFFFF;
+  --muted: #1A1D23;
+  --muted-foreground: rgba(255, 255, 255, 0.65);
+  --accent: #FFC857;
+  --accent-foreground: #0B0C0F;
+  --destructive: #FF6B6B;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.1);
+  --input-background: #0F1114;
+  --switch-background: #1A1D23;
+  --ring: rgba(255, 200, 87, 0.3);
+  --radius: 0.75rem;
+
+  /* Charts */
+  --chart-1: #FFC857;
+  --chart-2: #52D890;
+  --chart-3: #6B9AFF;
+  --chart-4: #FF6B6B;
+  --chart-5: #FFB84D;
+
+  /* Sidebar */
+  --sidebar: #0F1114;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #FFC857;
+  --sidebar-primary-foreground: #0B0C0F;
+  --sidebar-accent: #14161A;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: rgba(255, 200, 87, 0.3);
+}
+
+@theme inline {
+  --color-bg-900: var(--bg-900);
+  --color-panel-800: var(--panel-800);
+  --color-panel-700: var(--panel-700);
+  --color-panel-600: var(--panel-600);
+  --color-muted-600: var(--muted-600);
+  --color-text-100: var(--text-100);
+  --color-text-60: var(--text-60);
+  --color-text-40: var(--text-40);
+  --color-accent-500: var(--accent-500);
+  --color-accent-400: var(--accent-400);
+  --color-success-500: var(--success-500);
+  --color-neutral-500: var(--neutral-500);
+  --color-glass-000: var(--glass-000);
+  
+  --shadow-elev-1: 0 6px 18px rgba(0,0,0,0.6);
+  --shadow-elev-2: 0 18px 36px rgba(0,0,0,0.7);
+  
+  --spacing-space-1: 4px;
+  --spacing-space-2: 8px;
+  --spacing-space-3: 12px;
+  --spacing-space-4: 16px;
+  --spacing-space-6: 24px;
+  --spacing-space-8: 32px;
+  --spacing-space-12: 48px;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-family);
+  }
+}
+
+@layer utilities {
+  .stylish-scrollbar::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  
+  .stylish-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .stylish-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-white/20 rounded-full;
+  }
+
+  .stylish-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-white/40;
+  }
+}
