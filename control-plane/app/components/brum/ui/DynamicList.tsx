@@ -54,7 +54,7 @@ export function DynamicList({
                                         handleChange(index, e.target.value);
                                     }
                                 }}
-                                className="flex h-10 w-full rounded-md border border-white/10 bg-[#14161A] px-3 py-2 text-sm text-white ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex h-10 w-full rounded-md border border-text-100/10 bg-panel-700 px-3 py-2 text-sm text-text-100 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <option value="" disabled>{placeholder}</option>
                                 {options.map((opt) => (
@@ -62,7 +62,7 @@ export function DynamicList({
                                         {opt.label}
                                     </option>
                                 ))}
-                                <option value="__custom__" className="text-accent-400 font-semibold border-t border-white/10 mt-2">Custom...</option>
+                                <option value="__custom__" className="text-accent-400 font-semibold border-t border-text-100/10 mt-2">Custom...</option>
                             </select>
                         ) : (
                             <div className="flex-1 flex gap-2">
@@ -70,7 +70,7 @@ export function DynamicList({
                                     value={item === "__custom__" ? "" : item}
                                     onChange={(e) => handleChange(index, e.target.value)}
                                     placeholder={placeholder}
-                                    className="bg-[#14161A] border-white/10 text-white"
+                                    className="bg-panel-700 border-text-100/10 text-text-100"
                                     autoFocus={item === "__custom__"}
                                 />
                                 {options && (
@@ -78,7 +78,7 @@ export function DynamicList({
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => handleChange(index, "")}
-                                        className="text-xs text-white/40 hover:text-white shrink-0"
+                                        className="text-xs text-text-100/40 hover:text-text-100 shrink-0"
                                     >
                                         Back to list
                                     </Button>
@@ -90,7 +90,7 @@ export function DynamicList({
                             variant="ghost"
                             size="icon"
                             onClick={() => handleRemove(index)}
-                            className="text-white/50 hover:text-red-400 hover:bg-red-400/10 shrink-0"
+                            className="text-text-100/50 hover:text-red-400 hover:bg-red-400/10 shrink-0"
                         >
                             <Trash2 className="h-4 w-4" />
                         </Button>

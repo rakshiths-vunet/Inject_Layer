@@ -22,7 +22,7 @@ export function Timeline() {
       case 'activated':
         return <Play className="w-4 h-4 text-[#52D890]" />;
       case 'deactivated':
-        return <Square className="w-4 h-4 text-white/40" />;
+        return <Square className="w-4 h-4 text-text-100/40" />;
       case 'modified':
         return <AlertCircle className="w-4 h-4 text-[#FFB84D]" />;
     }
@@ -33,7 +33,7 @@ export function Timeline() {
       case 'activated':
         return '#52D890';
       case 'deactivated':
-        return 'rgba(255, 255, 255, 0.3)';
+        return 'var(--text-60)';
       case 'modified':
         return '#FFB84D';
     }
@@ -54,15 +54,15 @@ export function Timeline() {
     <div className="px-8 py-8">
       <div className="max-w-[1920px] mx-auto">
         <div className="flex items-center gap-3 mb-6">
-          <Clock className="w-5 h-5 text-white/50" />
+          <Clock className="w-5 h-5 text-text-100/50" />
           <h2 className="text-xl font-bold">Activity Timeline</h2>
         </div>
 
         <div
           className="rounded-xl p-6"
           style={{
-            backgroundColor: '#14161A',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'var(--panel-700)',
+            border: '1px solid var(--border)',
           }}
         >
           <div className="space-y-4">
@@ -77,7 +77,7 @@ export function Timeline() {
                     {getEventIcon(event.type)}
                   </div>
                   {index < mockEvents.length - 1 && (
-                    <div className="w-0.5 h-12 bg-white/10 my-1" />
+                    <div className="w-0.5 h-12 bg-text-100/10 my-1" />
                   )}
                 </div>
 
@@ -97,11 +97,11 @@ export function Timeline() {
                         </span>
                         <span className="text-sm font-medium">{event.scenario}</span>
                       </div>
-                      <div className="text-sm text-white/50">
-                        by <span className="text-white/70">{event.user}</span>
+                      <div className="text-sm text-text-100/50">
+                        by <span className="text-text-100/70">{event.user}</span>
                       </div>
                     </div>
-                    <div className="text-sm text-white/40 whitespace-nowrap">{event.timestamp}</div>
+                    <div className="text-sm text-text-100/40 whitespace-nowrap">{event.timestamp}</div>
                   </div>
                 </div>
               </div>

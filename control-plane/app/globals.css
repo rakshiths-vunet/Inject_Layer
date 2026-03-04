@@ -4,19 +4,83 @@
   --font-size: 16px;
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
+  /* Gudanta Light Theme */
+  --bg-900: #F1F5F9;
+  --panel-800: #FFFFFF;
+  --panel-700: #F1F5F9;
+  --panel-600: #E2E8F0;
+  --muted-600: #CBD5E1;
+  --text-100: #0F172A;
+  --text-60: rgba(15, 23, 42, 0.65);
+  --text-40: rgba(15, 23, 42, 0.40);
+  --accent-500: #2563EB;
+  --accent-400: #3B82F6;
+  --success-500: #22C55E;
+  --neutral-500: #64748B;
+  --glass-000: rgba(0, 0, 0, 0.03);
+
+  /* Gudanta Light Theme - Production Colors */
+  --accent-blue: #2563EB;
+  --success-green: #22C55E;
+  --danger-red: #EF4444;
+  --warning-orange: #F97316;
+
+  /* Base Theme Variables */
+  --background: #F1F5F9;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #2563EB;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1F5F9;
+  --secondary-foreground: #0F172A;
+  --muted: #F1F5F9;
+  --muted-foreground: rgba(15, 23, 42, 0.65);
+  --accent: #2563EB;
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(15, 23, 42, 0.1);
+  --input: rgba(15, 23, 42, 0.1);
+  --input-background: #FFFFFF;
+  --switch-background: #E2E8F0;
+  --ring: rgba(37, 99, 235, 0.3);
+  --radius: 0.75rem;
+
+  /* Charts */
+  --chart-1: #2563EB;
+  --chart-2: #22C55E;
+  --chart-3: #3B82F6;
+  --chart-4: #EF4444;
+  --chart-5: #F97316;
+
+  /* Sidebar */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #0F172A;
+  --sidebar-primary: #2563EB;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F1F5F9;
+  --sidebar-accent-foreground: #0F172A;
+  --sidebar-border: rgba(15, 23, 42, 0.1);
+  --sidebar-ring: rgba(37, 99, 235, 0.3);
+}
+
+.dark {
   --bg-900: #0B0C0F;
   --panel-800: #0F1114;
   --panel-700: #14161A;
   --panel-600: #1A1D23;
   --muted-600: #1B1E22;
   --text-100: #FFFFFF;
-  --text-60: rgba(255,255,255,0.65);
-  --text-40: rgba(255,255,255,0.40);
+  --text-60: rgba(255, 255, 255, 0.65);
+  --text-40: rgba(255, 255, 255, 0.40);
   --accent-500: #FFC857;
   --accent-400: #FFD980;
   --success-500: #52D890;
   --neutral-500: #9AA0A6;
-  --glass-000: rgba(255,255,255,0.03);
+  --glass-000: rgba(255, 255, 255, 0.03);
 
   /* Gudanta Dark Theme - Production Colors */
   --accent-yellow: #FFC857;
@@ -46,7 +110,6 @@
   --input-background: #0F1114;
   --switch-background: #1A1D23;
   --ring: rgba(255, 200, 87, 0.3);
-  --radius: 0.75rem;
 
   /* Charts */
   --chart-1: #FFC857;
@@ -80,10 +143,10 @@
   --color-success-500: var(--success-500);
   --color-neutral-500: var(--neutral-500);
   --color-glass-000: var(--glass-000);
-  
-  --shadow-elev-1: 0 6px 18px rgba(0,0,0,0.6);
-  --shadow-elev-2: 0 18px 36px rgba(0,0,0,0.7);
-  
+
+  --shadow-elev-1: 0 6px 18px rgba(0, 0, 0, 0.6);
+  --shadow-elev-2: 0 18px 36px rgba(0, 0, 0, 0.7);
+
   --spacing-space-1: 4px;
   --spacing-space-2: 8px;
   --spacing-space-3: 12px;
@@ -136,6 +199,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-family);
@@ -147,16 +211,16 @@
     height: 6px;
     width: 6px;
   }
-  
+
   .stylish-scrollbar::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   .stylish-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-white/20 rounded-full;
+    @apply bg-text-100/20 rounded-full;
   }
 
   .stylish-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-white/40;
+    @apply bg-text-100/40;
   }
 }

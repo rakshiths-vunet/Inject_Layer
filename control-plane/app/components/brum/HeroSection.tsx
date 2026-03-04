@@ -36,13 +36,14 @@ export function HeroSection({ onCreateScenario, onKillAll, stats }: HeroSectionP
       <div className="max-w-[1920px] mx-auto">
         <div className="rounded-2xl p-12 relative overflow-hidden"
           style={{
-            backgroundColor: '#14161A',
-            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+            backgroundColor: 'var(--panel-700)',
+            border: '1px solid var(--border)',
+            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.2)'
           }}>
           {/* Background gradient effect */}
           <div className="absolute inset-0 opacity-20"
             style={{
-              background: 'radial-gradient(circle at top right, rgba(255, 200, 87, 0.15), transparent 50%), radial-gradient(circle at bottom left, rgba(82, 216, 144, 0.1), transparent 50%)'
+              background: 'radial-gradient(circle at top right, var(--accent-500), transparent 50%) no-repeat, radial-gradient(circle at bottom left, rgba(82, 216, 144, 0.1), transparent 50%)'
             }} />
 
           <div className="relative z-10 flex items-start justify-between gap-12">
@@ -50,17 +51,17 @@ export function HeroSection({ onCreateScenario, onKillAll, stats }: HeroSectionP
             <div className="flex-1 max-w-3xl">
               <h1 className="text-5xl font-bold mb-4 tracking-tight leading-tight">
                 Simulate Real-World User Friction <br />
-                <span className="text-white/65">Without Touching Production Code.</span>
+                <span className="text-text-100/65">Without Touching Production Code.</span>
               </h1>
 
-              <p className="text-lg text-white/65 mb-8 leading-relaxed">
+              <p className="text-lg text-text-100/65 mb-8 leading-relaxed">
                 Inject latency, force API failures, drop packets, and sabotage performance — safely and instantly.
               </p>
 
               <div className="flex items-center gap-4">
                 <button
                   onClick={onCreateScenario}
-                  className="px-6 py-3 rounded-xl font-semibold bg-[#FFC857] text-[#0B0C0F] hover:bg-[#FFD470] transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-2"
+                  className="px-6 py-3 rounded-xl font-semibold bg-accent-500 text-bg-900 hover:bg-accent-400 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-2"
                 >
                   <Plus className="w-5 h-5" />
                   Create Scenario
@@ -68,7 +69,7 @@ export function HeroSection({ onCreateScenario, onKillAll, stats }: HeroSectionP
 
                 <button
                   onClick={onKillAll}
-                  className="px-6 py-3 rounded-xl font-semibold border border-white/20 text-white/90 hover:bg-white/5 hover:border-white/30 transition-all duration-200 flex items-center gap-2"
+                  className="px-6 py-3 rounded-xl font-semibold border border-text-100/20 text-text-100/90 hover:bg-text-100/5 hover:border-text-100/30 transition-all duration-200 flex items-center gap-2"
                 >
                   <XCircle className="w-5 h-5" />
                   Kill All Injections
@@ -83,8 +84,8 @@ export function HeroSection({ onCreateScenario, onKillAll, stats }: HeroSectionP
                   key={metric.label}
                   className="rounded-xl p-5 backdrop-blur-sm"
                   style={{
-                    backgroundColor: 'rgba(26, 29, 35, 0.6)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)'
+                    backgroundColor: 'var(--panel-600)',
+                    border: '1px solid var(--border)'
                   }}
                 >
                   <div className="flex items-start justify-between mb-3">
@@ -94,7 +95,7 @@ export function HeroSection({ onCreateScenario, onKillAll, stats }: HeroSectionP
                     </div>
                   </div>
                   <div className="text-3xl font-bold mb-1">{metric.value}</div>
-                  <div className="text-sm text-white/50">{metric.label}</div>
+                  <div className="text-sm text-text-100/50">{metric.label}</div>
                 </div>
               ))}
             </div>

@@ -17,7 +17,7 @@ export function ActiveInjections() {
     const loading = metricsLoading || rulesLoading;
     const error = metricsError || rulesError;
 
-    if (loading) return <div className="text-white">Loading metrics...</div>;
+    if (loading) return <div className="text-text-100">Loading metrics...</div>;
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
     // Get all rules from chaos API
@@ -134,32 +134,32 @@ export function ActiveInjections() {
             </div>
 
             {/* Active Rules List */}
-            <Card className="bg-[#0F1114] border-white/10 p-6">
-                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <Card className="bg-panel-800 border-text-100/10 p-6">
+                <h3 className="text-lg font-bold text-text-100 mb-4 flex items-center gap-2">
                     <Activity className="w-5 h-5 text-red-500 animate-pulse" />
                     Active Chaos Rules
                 </h3>
 
                 <div className="space-y-3">
                     {activeRules.length === 0 ? (
-                        <p className="text-white/40 italic">No chaos rules defined.</p>
+                        <p className="text-text-100/40 italic">No chaos rules defined.</p>
                     ) : (
                         activeRules.map(rule => (
                             <div
                                 key={rule.id}
                                 className={`p-4 rounded-lg border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all ${rule.enabled
-                                    ? 'bg-[#1A1D24] border-white/5 opacity-100'
-                                    : 'bg-[#1A1D24]/50 border-white/5 opacity-60 grayscale-[0.5]'
+                                    ? 'bg-panel-600 border-text-100/5 opacity-100'
+                                    : 'bg-panel-600/50 border-text-100/5 opacity-60 grayscale-[0.5]'
                                     }`}
                             >
                                 <div className="flex-1 space-y-2">
                                     <div className="flex items-center gap-3">
-                                        <h4 className="font-semibold text-lg text-white tracking-tight">{rule.name || "Untitled Rule"}</h4>
-                                        <Badge variant="outline" className="text-xs uppercase bg-white/5 border-white/10 text-white/70">
+                                        <h4 className="font-semibold text-lg text-text-100 tracking-tight">{rule.name || "Untitled Rule"}</h4>
+                                        <Badge variant="outline" className="text-xs uppercase bg-text-100/5 border-text-100/10 text-text-100/70">
                                             {rule.action}
                                         </Badge>
                                         {!rule.enabled && (
-                                            <Badge variant="outline" className="text-[10px] uppercase font-bold bg-white/10 text-white/50 border-white/5">
+                                            <Badge variant="outline" className="text-[10px] uppercase font-bold bg-text-100/10 text-text-100/50 border-text-100/5">
                                                 Disabled
                                             </Badge>
                                         )}
@@ -168,7 +168,7 @@ export function ActiveInjections() {
                                     {/* Selectors Display */}
                                     {rule.selectors && Object.keys(rule.selectors).length > 0 && (
                                         <div className="flex flex-wrap gap-2 items-center">
-                                            <span className="text-xs text-white/40 uppercase tracking-wider font-semibold">Target:</span>
+                                            <span className="text-xs text-text-100/40 uppercase tracking-wider font-semibold">Target:</span>
                                             {Object.entries(rule.selectors).map(([key, value]) => (
                                                 <div key={key} className="px-2 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-200 text-xs font-mono">
                                                     <span className="opacity-70">{key}:</span> {String(value)}
@@ -177,7 +177,7 @@ export function ActiveInjections() {
                                         </div>
                                     )}
 
-                                    <div className="text-[10px] font-mono text-white/30 flex items-center gap-2">
+                                    <div className="text-[10px] font-mono text-text-100/30 flex items-center gap-2">
                                         <span>ID: {rule.id}</span>
                                     </div>
                                 </div>
@@ -209,7 +209,7 @@ export function ActiveInjections() {
                                         <Button
                                             size="sm"
                                             variant={rule.enabled ? "destructive" : "default"}
-                                            className={`h-9 px-4 ${!rule.enabled ? 'bg-green-600 hover:bg-green-700 text-white border-none' : ''}`}
+                                            className={`h-9 px-4 ${!rule.enabled ? 'bg-green-600 hover:bg-green-700 text-text-100 border-none' : ''}`}
                                             onClick={() => handleToggleRule(rule.id, rule.name, rule.enabled)}
                                             disabled={togglingRules.has(rule.id) || deletingRules.has(rule.id)}
                                         >
@@ -220,7 +220,7 @@ export function ActiveInjections() {
                                         <Button
                                             size="sm"
                                             variant="outline"
-                                            className="h-9 w-9 p-0 border-white/10 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 text-white/40"
+                                            className="h-9 w-9 p-0 border-text-100/10 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 text-text-100/40"
                                             onClick={() => handleDeleteRule(rule.id, rule.name)}
                                             disabled={togglingRules.has(rule.id) || deletingRules.has(rule.id)}
                                         >
@@ -239,12 +239,12 @@ export function ActiveInjections() {
 
 function StatCard({ title, value, icon, subtext, trend }: any) {
     return (
-        <Card className="bg-[#0F1114] border-white/10 p-5">
+        <Card className="bg-panel-800 border-text-100/10 p-5">
             <div className="flex justify-between items-start mb-2">
-                <span className="text-white/60 text-sm font-medium">{title}</span>
+                <span className="text-text-100/60 text-sm font-medium">{title}</span>
                 {icon}
             </div>
-            <div className="text-3xl font-bold text-white mb-1">{value}</div>
+            <div className="text-3xl font-bold text-text-100 mb-1">{value}</div>
             <div className={`text-xs ${trend === 'high' ? 'text-red-400' : 'text-green-400'}`}>
                 {subtext}
             </div>

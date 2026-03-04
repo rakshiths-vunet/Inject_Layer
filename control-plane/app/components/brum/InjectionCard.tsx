@@ -27,9 +27,9 @@ export function InjectionCard({
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       className="rounded-xl p-6 cursor-pointer group relative overflow-hidden"
       style={{
-        backgroundColor: '#14161A',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+        backgroundColor: 'var(--panel-700)',
+        border: '1px solid var(--border)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
       }}
       onClick={(e) => {
         // Only expand if not clicking the switch
@@ -39,23 +39,23 @@ export function InjectionCard({
       }}
     >
       {/* Hover glow effect */}
-      <div 
+      <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
           background: `radial-gradient(circle at top right, ${iconColor}15, transparent 70%)`
         }}
       />
-      
+
       <div className="relative z-10">
         {/* Icon & Toggle */}
         <div className="flex items-start justify-between mb-4">
-          <div 
+          <div
             className="w-12 h-12 rounded-xl flex items-center justify-center"
             style={{ backgroundColor: `${iconColor}20` }}
           >
             <Icon className="w-6 h-6" style={{ color: iconColor }} />
           </div>
-          
+
           <Switch
             checked={enabled}
             onCheckedChange={onToggle}
@@ -64,12 +64,12 @@ export function InjectionCard({
         </div>
 
         {/* Content */}
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-sm text-white/50 mb-4 leading-relaxed">{description}</p>
+        <h3 className="text-lg font-semibold mb-2 truncate" title={title}>{title}</h3>
+        <p className="text-sm text-text-100/50 mb-4 leading-relaxed line-clamp-2 min-h-[40px]" title={description}>{description}</p>
 
         {/* Expand button */}
         <button
-          className="flex items-center gap-2 text-sm font-medium text-white/65 hover:text-[#FFC857] transition-colors group/btn"
+          className="flex items-center gap-2 text-sm font-medium text-text-100/65 hover:text-accent-500 transition-colors group/btn"
           onClick={(e) => {
             e.stopPropagation();
             onExpand();

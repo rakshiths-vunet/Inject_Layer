@@ -13,7 +13,7 @@ export function KillSwitch({ onKillAll }: KillSwitchProps) {
           whileHover={{ scale: 1.01 }}
           className="rounded-2xl p-8 relative overflow-hidden"
           style={{
-            backgroundColor: '#14161A',
+            backgroundColor: 'var(--panel-700)',
             border: '1px solid rgba(255, 107, 107, 0.2)',
             boxShadow: '0 4px 24px rgba(255, 107, 107, 0.1)',
           }}
@@ -33,7 +33,7 @@ export function KillSwitch({ onKillAll }: KillSwitchProps) {
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-1">Emergency Reset</h3>
-                <p className="text-sm text-white/50">
+                <p className="text-sm text-text-100/50">
                   Immediately disable all active chaos injection rules across all categories
                 </p>
               </div>
@@ -41,7 +41,7 @@ export function KillSwitch({ onKillAll }: KillSwitchProps) {
 
             <button
               onClick={onKillAll}
-              className="px-8 py-4 rounded-xl font-semibold bg-[#FF6B6B] text-white hover:bg-[#FF5555] transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-3"
+              className="px-8 py-4 rounded-xl font-semibold bg-[#FF6B6B] text-text-100 hover:bg-[#FF5555] transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-3"
             >
               <Power className="w-5 h-5" />
               Disable All Chaos Rules Immediately

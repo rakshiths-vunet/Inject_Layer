@@ -19,6 +19,10 @@ import { cn } from "./utils";
 export interface Option {
     label: string;
     value: string;
+    tag?: string; // App name
+    tagColor?: string; // Background color for app tag
+    typeTag?: string; // Asset type (e.g., JS, Image, CSS)
+    typeColor?: string; // Background color for type tag
 }
 
 interface MultiSelectProps {
@@ -50,7 +54,7 @@ export function MultiSelect({
                     role="combobox"
                     aria-expanded={open}
                     className={cn(
-                        "w-full justify-between bg-[#14161A] border-white/10 text-white hover:bg-[#1A1D24] min-h-10 h-auto",
+                        "w-full justify-between bg-panel-700 border-text-100/10 text-text-100 hover:bg-panel-600 min-h-10 h-auto",
                         className
                     )}
                 >
@@ -64,7 +68,8 @@ export function MultiSelect({
                                 <Badge
                                     key={item}
                                     variant="secondary"
-                                    className="mr-1 mb-1 bg-white/10 text-white hover:bg-white/20 border-none"
+                                    className="mr-1 mb-1 bg-text-100/10 text-text-100 hover:bg-text-100/20 border-none"
+                                    style={option?.typeColor ? { borderLeft: `2px solid ${option.typeColor}` } : {}}
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleUnselect(item);
@@ -99,20 +104,25 @@ export function MultiSelect({
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0 bg-[#1A1D24] border-white/10 text-white">
-                <Command className="bg-[#1A1D24] text-white">
+            <PopoverContent
+                className="w-full p-0 bg-panel-600 border-text-100/10 text-text-100 z-[9999]"
+                align="start"
+                style={{ width: 'var(--radix-popover-trigger-width)' }}
+            >
+                <Command className="bg-panel-600 text-text-100" shouldFilter={false}>
                     {/* Removing CommandInput because it's not strictly necessary for simple asset selection and might complicate styling/focus. 
               We can add it back if the list becomes long. For assets (5 items) it's overkill. 
               But let's keep the structure ready if needed. 
               Re-adding CommandList for scrolling.
           */}
-                    {/* <CommandInput placeholder="Search..." className="border-white/10 text-white" /> */}
+                    {/* <CommandInput placeholder="Search..." className="border-text-100/10 text-text-100" /> */}
                     <CommandList>
                         {/* <CommandEmpty>No item found.</CommandEmpty> */}
                         <CommandGroup className="max-h-64 overflow-auto">
                             {options.map((option) => (
                                 <CommandItem
                                     key={option.value}
+                                    value={option.value}
                                     onSelect={() => {
                                         onChange(
                                             selected.includes(option.value)
@@ -122,7 +132,7 @@ export function MultiSelect({
                                         // Do not close popover to allow multiple selections
                                         // setOpen(false);
                                     }}
-                                    className="data-[selected=true]:bg-white/10 aria-selected:bg-white/10 text-white hover:bg-white/5 cursor-pointer"
+                                    className="data-[selected=true]:bg-text-100/10 aria-selected:bg-text-100/10 text-text-100 hover:bg-text-100/5 cursor-pointer"
                                 >
                                     <Check
                                         className={cn(
@@ -130,7 +140,29 @@ export function MultiSelect({
                                             selected.includes(option.value) ? "opacity-100" : "opacity-0"
                                         )}
                                     />
-                                    {option.label}
+                                    <span className="flex-1 truncate">{option.label}</span>
+                                    {(option.typeTag || option.tag) && (
+                                        <div className="flex gap-1.5 ml-2">
+                                            {option.typeTag && (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="text-[9px] px-1.5 py-0 flex items-center justify-center border-none font-medium uppercase tracking-wider h-5"
+                                                    style={{ backgroundColor: option.typeColor || 'rgba(255,255,255,0.1)', color: '#fff' }}
+                                                >
+                                                    {option.typeTag}
+                                                </Badge>
+                                            )}
+                                            {option.tag && (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="text-[9px] px-1.5 py-0 flex items-center justify-center border-none font-medium h-5 whitespace-nowrap"
+                                                    style={{ backgroundColor: option.tagColor || 'rgba(255,255,255,0.05)', color: '#fff' }}
+                                                >
+                                                    {option.tag}
+                                                </Badge>
+                                            )}
+                                        </div>
+                                    )}
                                 </CommandItem>
                             ))}
                         </CommandGroup>

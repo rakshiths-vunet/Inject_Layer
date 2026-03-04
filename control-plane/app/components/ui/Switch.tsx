@@ -22,7 +22,7 @@ export function Switch({ checked, onCheckedChange, disabled }: SwitchProps) {
         >
             <span
                 className={`
-          block w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 absolute top-1 left-1
+          block w-4 h-4 rounded-full bg-text-100 shadow-sm transition-transform duration-200 absolute top-1 left-1
           ${checked ? "translate-x-4" : "translate-x-0 bg-text-40"}
         `}
             />

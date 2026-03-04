@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Navbar } from "./components/layout/Navbar";
+import { ThemeProvider } from "./components/layout/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,14 +21,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} antialiased bg-bg-900 text-text-60 font-sans min-h-screen flex flex-col`}
       >
-        <Navbar />
-        <main className="flex-1 w-full max-w-[1280px] mx-auto px-6 py-8">
-          {children}
-        </main>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Navbar />
+          <main className="flex-1 w-full max-w-[1280px] mx-auto px-6 py-8">
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

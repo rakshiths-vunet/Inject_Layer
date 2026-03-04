@@ -47,13 +47,13 @@ export function ActivityTimeline() {
     // For now, we'll keep the mock data but structure it for easy integration.
 
     return (
-        <Card className="bg-[#0F1114] border-white/10 p-6 h-full">
-            <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+        <Card className="bg-panel-800 border-text-100/10 p-6 h-full">
+            <h3 className="text-lg font-bold text-text-100 mb-6 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-blue-500" />
                 Activity Timeline
             </h3>
 
-            <div className="relative border-l border-white/10 ml-3 space-y-8">
+            <div className="relative border-l border-text-100/10 ml-3 space-y-8">
                 {events.map((event) => (
                     <div key={event.id} className="relative pl-8">
                         {/* Dot */}
@@ -61,20 +61,20 @@ export function ActivityTimeline() {
 
                         <div className="flex flex-col gap-1">
                             <div className="flex justify-between items-start">
-                                <span className="text-sm font-semibold text-white">{event.action}</span>
-                                <span className="text-xs text-white/40">{event.timestamp}</span>
+                                <span className="text-sm font-semibold text-text-100">{event.action}</span>
+                                <span className="text-xs text-text-100/40">{event.timestamp}</span>
                             </div>
-                            <p className="text-xs text-white/70 mb-1">{event.details}</p>
+                            <p className="text-xs text-text-100/70 mb-1">{event.details}</p>
 
                             <div className="flex items-center gap-3 mt-1">
-                                <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-full border border-white/10">
-                                    <User className="w-3 h-3 text-white/50" />
-                                    <span className="text-[10px] text-white/60">{event.user}</span>
+                                <div className="flex items-center gap-1.5 bg-text-100/5 px-2 py-1 rounded-full border border-text-100/10">
+                                    <User className="w-3 h-3 text-text-100/50" />
+                                    <span className="text-[10px] text-text-100/60">{event.user}</span>
                                 </div>
                                 {event.ip && (
-                                    <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-full border border-white/10">
-                                        <MapPin className="w-3 h-3 text-white/50" />
-                                        <span className="text-[10px] text-white/60">{event.ip}</span>
+                                    <div className="flex items-center gap-1.5 bg-text-100/5 px-2 py-1 rounded-full border border-text-100/10">
+                                        <MapPin className="w-3 h-3 text-text-100/50" />
+                                        <span className="text-[10px] text-text-100/60">{event.ip}</span>
                                     </div>
                                 )}
                             </div>

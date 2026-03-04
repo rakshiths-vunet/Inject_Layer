@@ -23,12 +23,21 @@ import { Toaster } from "../components/brum/ui/sonner";
 import { ActiveInjections } from "../components/dashboard/ActiveInjections";
 import { usePrometheusMetrics } from "../hooks/usePrometheusMetrics";
 import { useChaosRules } from "../hooks/useChaosRules";
+import { CreateScenarioModal } from "../components/brum/CreateScenarioModal";
+import { Scenario } from "../components/brum/PresetCard";
 
 import { INJECTION_CATEGORIES, InjectionCategory } from "./injectionCategories";
 
 export default function BRUMPage() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [categories, setCategories] = useState<InjectionCategory[]>(INJECTION_CATEGORIES);
+    const [isScenarioModalOpen, setIsScenarioModalOpen] = useState(false);
+
+    // Scenario States
+    const [scenarios, setScenarios] = useState<Scenario[]>([]);
+    const [processingScenarioId, setProcessingScenarioId] = useState<string | null>(null);
+    const [scenarioToEdit, setScenarioToEdit] = useState<Scenario | null>(null);
+    const [scenarioFilter, setScenarioFilter] = useState<'all' | 'active' | 'scheduled' | 'draft' | 'inactive'>('all');
 
     // Hooks for metrics and rules
     const { getGlobalStats } = usePrometheusMetrics(2000);
@@ -52,47 +61,94 @@ export default function BRUMPage() {
         }));
     }, [rules, isCategoryActive]);
 
-    const presets = [
-        {
-            title: "Slow Core Banking",
-            description: "Simulate degraded banking API performance",
-            impact: { latency: "+8.2s", errorRate: "12%" },
-            estimatedImpact: "high" as const,
-        },
-        // ... (rest of presets)
-        {
-            title: "Silent Payment Failure",
-            description:
-                "Payment endpoint returns 200 but fails silently",
-            impact: { errorRate: "5%", cls: "0.3" },
-            estimatedImpact: "critical" as const,
-        },
-        {
-            title: "Intermittent Network",
-            description: "20% random packet drop simulation",
-            impact: { latency: "+2.1s" },
-            estimatedImpact: "medium" as const,
-        },
-        {
-            title: "CDN Outage",
-            description: "Block all static asset delivery",
-            impact: { errorRate: "100%", latency: "+∞" },
-            estimatedImpact: "critical" as const,
-        },
-        {
-            title: "Layout Shift Chaos",
-            description: "Inject dynamic content shifts and reflows",
-            impact: { cls: "0.8" },
-            estimatedImpact: "high" as const,
-        },
-        {
-            title: "Input Delay Attack",
-            description:
-                "Simulate poor INP with delayed interactions",
-            impact: { latency: "+600ms" },
-            estimatedImpact: "medium" as const,
-        },
-    ];
+    const fetchScenarios = async () => {
+        try {
+            const res = await fetch('/api/scenarios');
+            const data = await res.json();
+            setScenarios(Array.isArray(data) ? data : []);
+        } catch (e) {
+            console.error("Failed to load scenarios");
+        }
+    };
+
+    useEffect(() => {
+        fetchScenarios();
+    }, []);
+
+    const handleActivateScenario = async (id: string) => {
+        setProcessingScenarioId(id);
+        try {
+            const res = await fetch(`/api/scenarios/${id}/activate`, { method: 'POST' });
+            if (!res.ok) throw new Error('Activation failed');
+            toast.success("Scenario Activated!");
+            await fetchScenarios();
+            refreshRules();
+        } catch (e: any) {
+            toast.error(e.message || "Failed to activate scenario");
+        } finally {
+            setProcessingScenarioId(null);
+        }
+    };
+
+    const handleDeactivateScenario = async (id: string) => {
+        setProcessingScenarioId(id);
+        try {
+            const res = await fetch(`/api/scenarios/${id}/deactivate`, { method: 'POST' });
+            if (!res.ok) throw new Error('Deactivation failed');
+            toast.success("Scenario Deactivated!");
+            await fetchScenarios();
+            refreshRules();
+        } catch (e: any) {
+            toast.error(e.message || "Failed to deactivate scenario");
+        } finally {
+            setProcessingScenarioId(null);
+        }
+    };
+
+    const handleDeleteScenario = async (id: string, name: string) => {
+        if (!window.confirm(`Are you sure you want to delete scenario: ${name}?`)) return;
+        setProcessingScenarioId(id);
+        try {
+            const res = await fetch(`/api/scenarios/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Deletion failed');
+            toast.success("Scenario Deleted!");
+            await fetchScenarios();
+            refreshRules();
+        } catch (e: any) {
+            toast.error(e.message || "Failed to delete scenario");
+        } finally {
+            setProcessingScenarioId(null);
+        }
+    };
+
+    const handleEditScenario = (scenario: Scenario) => {
+        setScenarioToEdit(scenario);
+        setIsScenarioModalOpen(true);
+    };
+
+    const handleDuplicateScenario = async (scenario: Scenario) => {
+        setProcessingScenarioId(scenario.id);
+        try {
+            const res = await fetch('/api/scenarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: `${scenario.name} (Copy)`,
+                    description: scenario.description,
+                    sites: scenario.sites,
+                    injections: scenario.injections,
+                    action: 'draft'
+                })
+            });
+            if (!res.ok) throw new Error('Duplication failed');
+            toast.success("Scenario Duplicated!");
+            await fetchScenarios();
+        } catch (e: any) {
+            toast.error(e.message || "Failed to duplicate scenario");
+        } finally {
+            setProcessingScenarioId(null);
+        }
+    };
 
     const handleToggleCategory = async (
         id: string,
@@ -127,7 +183,8 @@ export default function BRUMPage() {
     };
 
     const handleCreateScenario = () => {
-        toast.info("Opening scenario builder...");
+        setScenarioToEdit(null);
+        setIsScenarioModalOpen(true);
     };
 
     const handleKillAll = async () => {
@@ -147,25 +204,17 @@ export default function BRUMPage() {
                     details: 'Disabled all active injections'
                 })
             });
+            await fetchScenarios();
         } catch (e) {
             toast.error("Failed to disable all rules");
         }
     };
 
-    const handleActivatePreset = (title: string) => {
-        toast.success(`Activated preset: ${title}`);
-        fetch('/api/activity', {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'Activated Preset',
-                details: title
-            })
-        });
-    };
+    const filteredScenarios = scenarios.filter(s => scenarioFilter === 'all' || s.status === scenarioFilter);
 
     return (
         <div
-            className="min-h-screen dark bg-[#0B0C0F]"
+            className="min-h-screen bg-bg-900"
             style={{ fontFamily: "var(--font-family)" }}
         >
             <Toaster position="top-right" />
@@ -178,6 +227,54 @@ export default function BRUMPage() {
                 stats={stats}
             />
 
+            {/* Scenario Presets */}
+            <div className="px-8 py-8 border-b border-text-100/10 bg-text-100/[0.02]">
+                <div className="max-w-[1920px] mx-auto">
+                    <div className="mb-6 flex items-center justify-between">
+                        <div>
+                            <h2 className="text-2xl font-bold mb-2 text-text-100">
+                                Scenario Presets
+                            </h2>
+                            <p className="text-text-100/50">
+                                Pre-configured and custom chaos scenarios
+                            </p>
+                        </div>
+                        <div className="flex bg-bg-900 rounded-lg p-1 border border-text-100/10 gap-1">
+                            {(['all', 'active', 'scheduled', 'draft', 'inactive'] as const).map(tab => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setScenarioFilter(tab)}
+                                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${scenarioFilter === tab ? 'bg-text-100/10 text-text-100 shadow-sm' : 'text-text-100/40 hover:text-text-100 hover:bg-text-100/5'
+                                        } capitalize`}
+                                >
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex gap-6 overflow-x-auto pb-8 pt-6 px-4 -mx-4 stylish-scrollbar">
+                        {filteredScenarios.map((scenario) => (
+                            <PresetCard
+                                key={scenario.id}
+                                scenario={scenario}
+                                isProcessing={processingScenarioId === scenario.id}
+                                onActivate={() => handleActivateScenario(scenario.id)}
+                                onDeactivate={() => handleDeactivateScenario(scenario.id)}
+                                onEdit={() => handleEditScenario(scenario)}
+                                onDelete={() => handleDeleteScenario(scenario.id, scenario.name)}
+                                onDuplicate={() => handleDuplicateScenario(scenario)}
+                            />
+                        ))}
+                        {filteredScenarios.length === 0 && (
+                            <div className="text-text-100/40 flex items-center justify-center p-12 border border-dashed border-text-100/10 rounded-2xl w-full bg-text-100/[0.01]">
+                                {scenarios.length === 0 ? 'No scenarios created yet. Click "Create Scenario" to get started!' : 'No scenarios match the selected filter.'}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
             {/* Active Injections Dashboard */}
             <div className="px-8 py-0 -mt-6 mb-8 relative z-10">
                 <div className="max-w-[1920px] mx-auto">
@@ -189,10 +286,10 @@ export default function BRUMPage() {
             <div className="px-8 py-8">
                 <div className="max-w-[1920px] mx-auto">
                     <div className="mb-6">
-                        <h2 className="text-2xl font-bold mb-2 text-white">
+                        <h2 className="text-2xl font-bold mb-2 text-text-100">
                             Injection Categories
                         </h2>
-                        <p className="text-white/50">
+                        <p className="text-text-100/50">
                             Configure and control specific chaos injection
                             types
                         </p>
@@ -219,34 +316,7 @@ export default function BRUMPage() {
                 </div>
             </div>
 
-            {/* Scenario Presets */}
-            <div className="px-8 py-8 border-t border-white/10">
-                <div className="max-w-[1920px] mx-auto">
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-bold mb-2 text-white">
-                            Scenario Presets
-                        </h2>
-                        <p className="text-white/50">
-                            Pre-configured chaos scenarios for common testing
-                            patterns
-                        </p>
-                    </div>
-
-                    <div className="flex gap-4 overflow-x-auto pb-4 stylish-scrollbar">
-                        {presets.map((preset) => (
-                            <PresetCard
-                                key={preset.title}
-                                {...preset}
-                                onActivate={() =>
-                                    handleActivatePreset(preset.title)
-                                }
-                            />
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            <div className="px-8 py-8 border-t border-white/10">
+            <div className="px-8 py-8 border-t border-text-100/10">
                 <div className="max-w-[1920px] mx-auto">
                     <ActivityTimeline />
                 </div>
@@ -262,14 +332,28 @@ export default function BRUMPage() {
                 onClose={() => setSelectedCategory(null)}
             />
 
+            <CreateScenarioModal
+                isOpen={isScenarioModalOpen}
+                scenarioToEdit={scenarioToEdit}
+                onClose={() => {
+                    setIsScenarioModalOpen(false);
+                    setScenarioToEdit(null);
+                }}
+                onSaveSuccess={() => {
+                    toast.success(scenarioToEdit ? "Scenario Updated!" : "Scenario Saved!");
+                    fetchScenarios();
+                    refreshRules();
+                }}
+            />
+
             {/* Footer */}
-            <div className="px-8 py-12 border-t border-white/10">
+            <div className="px-8 py-12 border-t border-text-100/10">
                 <div className="max-w-[1920px] mx-auto text-center">
-                    <p className="text-sm text-white/40">
+                    <p className="text-sm text-text-100/40">
                         CHAOS CONTROL — Browser-Side Error Injection Engine
                         v2.1.4
                     </p>
-                    <p className="text-xs text-white/30 mt-2">
+                    <p className="text-xs text-text-100/30 mt-2">
                         Built for SRE, QA, and Observability teams •
                         Enterprise-grade chaos engineering
                     </p>

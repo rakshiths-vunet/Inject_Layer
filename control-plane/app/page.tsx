@@ -35,31 +35,31 @@ export default function Home() {
                         <h2 className="text-2xl font-bold text-text-100 mb-3">APM</h2>
 
                         <p className="text-text-60 mb-6">
-                            Application Performance Monitoring. Monitor system health, manage failure
-                            injections, and analyze performance across microservices.
+                            Application Performance Monitoring. Inject network-level chaos and manage
+                            service-specific failure scenarios to test system resilience.
                         </p>
 
                         <div className="space-y-3 mb-6">
                             <div className="flex items-center gap-2 text-sm">
                                 <div className="w-1.5 h-1.5 rounded-full bg-accent-500" />
-                                <span className="text-text-60">Real-time metrics & dashboards</span>
+                                <span className="text-text-60">Toxiproxy Network Chaos</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm">
                                 <div className="w-1.5 h-1.5 rounded-full bg-accent-500" />
-                                <span className="text-text-60">Active failures tracking</span>
+                                <span className="text-text-60">OTP & JWT Service Chaos</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm">
                                 <div className="w-1.5 h-1.5 rounded-full bg-accent-500" />
-                                <span className="text-text-60">Live logs monitoring</span>
+                                <span className="text-text-60">Real-time Status Monitoring</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm">
                                 <div className="w-1.5 h-1.5 rounded-full bg-accent-500" />
-                                <span className="text-text-60">Service matrix visualization</span>
+                                <span className="text-text-60">Activity Log Console</span>
                             </div>
                         </div>
 
                         <div className="inline-flex items-center gap-2 text-accent-500 font-medium group-hover:gap-3 transition-all">
-                            <span>Explore APM Dashboard</span>
+                            <span>Explore APM Control Panel</span>
                             <Zap className="w-4 h-4" />
                         </div>
                     </div>
