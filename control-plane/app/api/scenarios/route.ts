@@ -78,8 +78,13 @@ export async function POST(req: Request) {
         }
 
         let finalEndTime = schedule_end_time || null;
-        if (action === 'activate' && timeout_minutes && !finalEndTime) {
-            finalEndTime = new Date(Date.now() + timeout_minutes * 60000).toISOString();
+        if ((action === 'activate' || action === 'scheduled') && timeout_minutes && !finalEndTime) {
+            // For scheduled scenarios, we calculate end time relative to start time if provided, 
+            // otherwise relative to NOW (for immediate activation).
+            const baseTime = (action === 'scheduled' && schedule_start_time)
+                ? new Date(schedule_start_time).getTime()
+                : Date.now();
+            finalEndTime = new Date(baseTime + timeout_minutes * 60000).toISOString();
         }
 
         // 5. Persist to PostgreSQL

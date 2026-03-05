@@ -103,7 +103,7 @@ export function ScenarioSchedulerControls({
                             className="bg-panel-700 border-text-100/10 text-text-100 truncate font-mono text-sm"
                         />
                         <p className="text-xs text-text-100/40">
-                            Leave blank for a one-time execution. If provided, the scenario will run repeatedly.
+                            Leave blank for a one-time execution. If provided, a <strong>Timeout</strong> is required to define the execution window.
                         </p>
                     </div>
                 </div>

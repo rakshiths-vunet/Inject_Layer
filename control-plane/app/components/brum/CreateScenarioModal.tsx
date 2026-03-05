@@ -21,6 +21,22 @@ export interface ScenarioInjection extends InjectionType {
 }
 
 
+// Converts a datetime-local string ("YYYY-MM-DDTHH:mm") to a UTC ISO string.
+// The datetime-local input doesn't include timezone, so we treat the value as local time.
+function localDatetimeToIso(localDatetime: string | null): string | null {
+    if (!localDatetime) return null;
+    return new Date(localDatetime).toISOString();
+}
+
+// Converts a UTC ISO string to the datetime-local format ("YYYY-MM-DDTHH:mm") in local time.
+function isoToLocalDatetime(isoString: string | null): string | null {
+    if (!isoString) return null;
+    const d = new Date(isoString);
+    // Format: YYYY-MM-DDTHH:mm (local time)
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export function CreateScenarioModal({ isOpen, onClose, onSaveSuccess, scenarioToEdit }: CreateScenarioModalProps) {
     const [scenarioName, setScenarioName] = useState("");
     const [description, setDescription] = useState("");
@@ -89,8 +105,9 @@ export function CreateScenarioModal({ isOpen, onClose, onSaveSuccess, scenarioTo
 
             setIsScheduled(!!scenarioToEdit.schedule_start_time || !!scenarioToEdit.cron_expression);
             setScheduleParams({
-                schedule_start_time: scenarioToEdit.schedule_start_time || null,
-                schedule_end_time: scenarioToEdit.schedule_end_time || null,
+                // Convert UTC ISO strings from DB back to local datetime-local format for the input
+                schedule_start_time: isoToLocalDatetime(scenarioToEdit.schedule_start_time) || null,
+                schedule_end_time: isoToLocalDatetime(scenarioToEdit.schedule_end_time) || null,
                 cron_expression: scenarioToEdit.cron_expression || null,
                 timeout_minutes: scenarioToEdit.timeout_minutes || null
             });
@@ -150,6 +167,10 @@ export function CreateScenarioModal({ isOpen, onClose, onSaveSuccess, scenarioTo
             }
         });
 
+        if (isScheduled && scheduleParams.cron_expression && !scheduleParams.timeout_minutes) {
+            errors.push("Recurring schedule (Cron) requires a Timeout duration.");
+        }
+
         return errors;
     };
 
@@ -174,7 +195,13 @@ export function CreateScenarioModal({ isOpen, onClose, onSaveSuccess, scenarioTo
             sites: selectedSites,
             injections,
             action,
-            ...(isScheduled ? scheduleParams : { schedule_start_time: null, schedule_end_time: null, cron_expression: null, timeout_minutes: null })
+            ...(isScheduled ? {
+                // Convert local datetime-local values to UTC ISO strings before sending to backend
+                schedule_start_time: localDatetimeToIso(scheduleParams.schedule_start_time),
+                schedule_end_time: localDatetimeToIso(scheduleParams.schedule_end_time),
+                cron_expression: scheduleParams.cron_expression,
+                timeout_minutes: scheduleParams.timeout_minutes
+            } : { schedule_start_time: null, schedule_end_time: null, cron_expression: null, timeout_minutes: null })
         };
 
         try {
