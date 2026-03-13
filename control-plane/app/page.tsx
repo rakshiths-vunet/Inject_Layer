@@ -104,7 +104,7 @@ export default function Home() {
                         </div>
 
                         <div className="inline-flex items-center gap-2 text-accent-500 font-medium group-hover:gap-3 transition-all">
-                            <span>Coming Soon</span>
+                            <span>Explore BRUM Control Plane</span>
                         </div>
                     </div>
 

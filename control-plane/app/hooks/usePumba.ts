@@ -14,6 +14,7 @@ export interface PumbaContainer {
         memory_mb: string;
         memory_raw: number;
     };
+    slackName: string;
 }
 
 interface PumbaState {
@@ -38,11 +39,20 @@ export function usePumba(host: string) {
         try {
             const res = await fetch(`/api/pumba/containers?host=${host}`);
             const data = await res.json();
-            const containers: PumbaContainer[] = Array.isArray(data.containers)
+            let containers: PumbaContainer[] = Array.isArray(data.containers)
                 ? data.containers
                 : Array.isArray(data)
                     ? data
                     : [];
+
+            // Extract "Slack Name" (Docker Stack)
+            containers = containers.map(c => {
+                // Split by _ or - and take the last part
+                const parts = c.name.split(/[_-]/);
+                const slackName = parts.length > 1 ? parts[parts.length - 1] : 'default';
+                return { ...c, slackName };
+            });
+
             setState(s => ({ ...s, containers, loadingContainers: false }));
         } catch (e: any) {
             setState(s => ({ ...s, error: e.message, loadingContainers: false }));

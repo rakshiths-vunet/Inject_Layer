@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { usePumba, PumbaContainer } from "../../hooks/usePumba";
 
 
-const PUMBA_HOSTS = ['10.1.92.124', '10.1.92.127'] as const;
+const PUMBA_HOSTS = ['10.1.92.124', '10.1.92.127', '10.1.92.129'] as const;
 type PumbaHost = typeof PUMBA_HOSTS[number];
 
 // ─── Container Selector ────────────────────────────────────────────────────────
@@ -35,8 +35,14 @@ function ContainerSelect({
                     className="w-full h-10 pl-3 pr-8 rounded-lg bg-panel-700 border border-text-100/10 text-sm font-mono text-text-100 focus:outline-none focus:border-accent-500/50 appearance-none disabled:opacity-40"
                 >
                     <option value="">-- select container --</option>
-                    {running.map(c => (
-                        <option key={c.id} value={c.name}>{c.name}</option>
+                    {Array.from(new Set(running.map(c => c.slackName))).sort().map(slack => (
+                        <optgroup key={slack} label={slack.toUpperCase()}>
+                            {running
+                                .filter(c => c.slackName === slack)
+                                .map(c => (
+                                    <option key={c.id} value={c.name}>{c.name}</option>
+                                ))}
+                        </optgroup>
                     ))}
                 </select>
                 <ChevronDown className="absolute right-2 top-3 w-4 h-4 text-text-100/40 pointer-events-none" />
@@ -309,7 +315,12 @@ function ContainerTable({ containers }: { containers: PumbaContainer[] }) {
                         <tbody>
                             {containers.map(c => (
                                 <tr key={c.id} className="border-b border-text-100/10 hover:bg-text-100/[0.02]">
-                                    <td className="px-4 py-2 text-text-100">{c.name}</td>
+                                    <td className="px-4 py-2 text-text-100">
+                                        <div className="flex flex-col">
+                                            <span>{c.name}</span>
+                                            <span className="text-[9px] text-accent-500/50 uppercase font-bold">{c.slackName}</span>
+                                        </div>
+                                    </td>
                                     <td className="px-4 py-2 text-text-100/40 truncate max-w-[200px]">{c.image}</td>
                                     <td className="px-4 py-2 text-text-100/40 truncate max-w-[120px]">
                                         {c.limits ? `${c.limits.cpus} / ${c.limits.memory_mb === 'unlimited' ? 'Unl.' : c.limits.memory_mb + 'MB'}` : '-'}
@@ -337,7 +348,13 @@ function ContainerTable({ containers }: { containers: PumbaContainer[] }) {
 
 export function PumbaPanel() {
     const [host, setHost] = useState<PumbaHost>('10.1.92.124');
+    const [selectedSlack, setSelectedSlack] = useState<string | null>(null);
     const { containers, loadingContainers, actionLoading, lastResponse, error, fetchContainers, runAction, checkHealth } = usePumba(host);
+
+    const slacks = Array.from(new Set(containers.map(c => c.slackName))).sort();
+    const filteredContainers = selectedSlack
+        ? containers.filter(c => c.slackName === selectedSlack)
+        : containers;
 
     useEffect(() => {
         fetchContainers();
@@ -412,21 +429,47 @@ export function PumbaPanel() {
             {/* 3 cards */}
             {containers.length > 0 && (
                 <>
+                    {/* Global Slack Filter */}
+                    <div className="flex flex-wrap gap-2 items-center px-1">
+                        <span className="text-[10px] font-bold text-text-100/30 uppercase tracking-widest mr-1">Filter by Stack:</span>
+                        <button
+                            onClick={() => setSelectedSlack(null)}
+                            className={`px-3 py-1 rounded-full text-[10px] font-bold border transition-all ${!selectedSlack
+                                ? 'bg-text-100/10 border-text-100/20 text-text-100'
+                                : 'bg-transparent border-text-100/5 text-text-100/30 hover:border-text-100/10'
+                                }`}
+                        >
+                            ALL STACKS
+                        </button>
+                        {slacks.map(slack => (
+                            <button
+                                key={slack}
+                                onClick={() => setSelectedSlack(slack)}
+                                className={`px-3 py-1 rounded-full text-[10px] font-bold border transition-all ${selectedSlack === slack
+                                    ? 'bg-accent-500/10 border-accent-500/30 text-accent-500'
+                                    : 'bg-transparent border-text-100/5 text-text-100/30 hover:border-text-100/10'
+                                    }`}
+                            >
+                                {slack.toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
+
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                         <CpuStressCard
-                            containers={containers}
+                            containers={filteredContainers}
                             loading={loadingContainers}
                             actionLoading={actionLoading}
                             onAction={runAction}
                         />
                         <MemoryStressCard
-                            containers={containers}
+                            containers={filteredContainers}
                             loading={loadingContainers}
                             actionLoading={actionLoading}
                             onAction={runAction}
                         />
                         <LifecycleCard
-                            containers={containers}
+                            containers={filteredContainers}
                             loading={loadingContainers}
                             actionLoading={actionLoading}
                             onAction={runAction}
@@ -434,7 +477,7 @@ export function PumbaPanel() {
                     </div>
 
                     {/* Container Table */}
-                    <ContainerTable containers={containers} />
+                    <ContainerTable containers={filteredContainers} />
                 </>
             )}
         </div>
